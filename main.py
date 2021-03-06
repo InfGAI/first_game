@@ -1,24 +1,29 @@
 import pygame
 import random
-
+size = weight, height = (1000, 800)
 
 class Ball():
-    def __init__(self, pos, color, speed=0):
+    def __init__(self, pos, color):
         self.pos = pos  # (100,100)
         self.color = color
-        self.speed = speed
+        self.dir = list(random.choices(range(-4, 5), k=2))
         pygame.draw.circle(screen, self.color, self.pos, 50)
 
     def hmove(self):
-        self.pos = (self.pos[0] + self.speed, self.pos[1])
+        x, y = self.pos
+        if x + 25 >= weight or x - 25 <= 0:
+            self.dir[0] *= -1
+        if y + 25 >= height or y - 25 <= 0:
+            self.dir[1] *= -1
+        self.pos = (self.pos[0] + self.dir[0], self.pos[1] + self.dir[1])
 
     def renew(self):
         pygame.draw.circle(screen, self.color, self.pos, 20)
 
 pygame.init()
-FPS=50
-screen=pygame.display.set_mode((600,300))
-clock=pygame.time.Clock()
+FPS = 50
+screen = pygame.display.set_mode(size)
+clock = pygame.time.Clock()
 ball_list=[]
 running=True
 while running:
@@ -29,8 +34,7 @@ while running:
             x, y = event.pos
             r, g, b = random.choices(range(0, 256), k=3)
             if event.button == 3:
-                delta = random.randint(1, 5)
-                ball_list.append(Ball((x, y), (r, g, b), delta))
+                ball_list.append(Ball((x, y), (r, g, b)))
 
     screen.fill((255, 0, 0))
     for ball in ball_list:
