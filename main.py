@@ -3,13 +3,14 @@ import random
 
 
 class Ball():
-    def __init__(self, pos, color):
+    def __init__(self, pos, color, speed=0):
         self.pos = pos  # (100,100)
         self.color = color
+        self.speed = speed
         pygame.draw.circle(screen, self.color, self.pos, 50)
 
     def hmove(self):
-        self.pos = (self.pos[0] + 1, self.pos[1])
+        self.pos = (self.pos[0] + self.speed, self.pos[1])
 
     def renew(self):
         pygame.draw.circle(screen, self.color, self.pos, 20)
@@ -27,15 +28,14 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = event.pos
             r, g, b = random.choices(range(0, 256), k=3)
-            if event.button == 1:
-                ball_list.append(Ball((x, y), (r, g, b)))
-            else:
-                ball_list.pop(0)
+            if event.button == 3:
+                delta = random.randint(1, 5)
+                ball_list.append(Ball((x, y), (r, g, b), delta))
+
     screen.fill((255, 0, 0))
     for ball in ball_list:
         ball.renew()
         ball.hmove()
-
 
     pygame.display.flip()
     clock.tick(FPS)
